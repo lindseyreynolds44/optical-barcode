@@ -130,10 +130,10 @@ public class DataMatrix implements BarcodeIO
    private char readCharFromCol(int col) 
    {
       //adjusts value for new barcode lower left location
-      int replacedLocale = this.image.MAX_HEIGHT - this.actualHeight;
+      int leftCorner = this.image.MAX_HEIGHT - this.actualHeight;
 
       int total = 0;
-      for (int y = this.image.MAX_HEIGHT - 1; y > replacedLocale; --y)
+      for (int y = this.image.MAX_HEIGHT - 1; y > leftCorner; --y)
       {
          if(this.image.getpixel(col, y))
          {
