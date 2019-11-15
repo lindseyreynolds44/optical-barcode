@@ -67,6 +67,43 @@ public class DataMatrix implements BarcodeIO
        * we expect the implementing object to contain a fully-defined image and text that are in 
        * agreement with each other.
        */ 
+      this.image = new BarcodeImage();
+
+      int textLength = this.text.length();
+
+      //adds 2 to the width for border 
+      this.actualWidth = textLength + 2;
+
+      //8 rows in the image plus the border width
+      this.actualHeight = 10;
+
+      //intial image creation 
+      for (int i = 1; i < textLength; i++)
+      {
+         int charWrite = (int) this.text.charAt(i);
+         this.writeCharToCol(i, charWrite);
+      }
+
+      //image adjustment to lower left corner 
+      int leftCorner = this.image.MAX_HEIGHT - this.actualHeight;
+
+      //adjusting the horizontal borders
+      for (int x = 1; x < this.actualWidth - 1; x++)
+      {
+         this.image.setPixel(x, this.image.MAX_HEIGHT - 1, true);
+         if(x % 2 == 0)
+         {
+            this.image.setPixel(x, leftCorner, true);
+         }
+      }
+
+      //adjusting the vertical borders 
+      for (int y = this.image.MAX_HEIGHT - 1; y >= leftCorner; --y)
+      {
+         image.setPixel(0, y, true);
+      }
+
+      return true;
 
    }
    
@@ -80,19 +117,49 @@ public class DataMatrix implements BarcodeIO
        * we expect the implementing object to contain a fully-defined image and text that are in 
        * agreement with each other.
        */ 
+      this.text = "";
+      for (int x = 1; x < this.actualWidth - 1; x++)
+      {
+         this.text += readCharFromCol(x);
+      }
+      return true;
 
    }
    
-    // Use for generateImageFromText() and translateImageToText()
-    private char readCharFromCol(int col) 
-    {
-    
-    }
-    // Use for generateImageFromText() and translateImageToText()
-    private boolean WriteCharToCol(int col, int code)
-    {
-    
-    }
+   // Use for generateImageFromText() and translateImageToText()
+   private char readCharFromCol(int col) 
+   {
+      //adjusts value for new barcode lower left location
+      int replacedLocale = this.image.MAX_HEIGHT - this.actualHeight;
+
+      int total = 0;
+      for (int y = this.image.MAX_HEIGHT - 1; y > replacedLocale; --y)
+      {
+         if(this.image.getpixel(col, y))
+         {
+            total += Math.pow(2, this.image.MAX_HEIGHT - (y + 2));
+         }
+      }
+      return (char) total;
+
+   }
+
+   // Use for generateImageFromText() and translateImageToText()
+   private boolean writeCharToCol(int col, int code)
+   {
+      //break apart the message into binary using repeated subtraction
+      int row;
+      int binaryDecomp = 128;
+      while (code > 0)
+      {
+         if(msg - binaryDecomp >= 0)
+         {
+               //use log on msg to calculate the row number
+               row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(msg) / Math.log(2));
+
+         }
+      }
+   }
    public void displayTextToConsole() 
    {
       // prints out the text string to the console.
@@ -101,8 +168,40 @@ public class DataMatrix implements BarcodeIO
    
    public void displayImageToConsole() 
    {
-      // should display only the relevant portion of the image, clipping the excess blank/white from the top and right.
-      //  prints out the image to the console.  In our implementation, we will do this in the form of a dot-matrix of blanks and asterisks 
+      /**
+       * should display only the relevant portion of the image, 
+       * clipping the excess blank/white from the top and right.
+       * prints out the image to the console.  
+       * In our implementation, we will do this in the form of a dot-matrix 
+       * of blanks and asterisks
+       */
+      
+       //top border displayed
+       for (int x = 0; x < this.actualWidth + 2; x++)
+       {
+          System.out.print("-");
+       }
+       System.out.println();
+
+       //displays data 
+       int leftCorner = this.image.MAX_HEIGHT - this.actualHeight;
+       for (int y = leftCorner; y < this.image.MAX_HEIGHT; y++)
+       {
+          System.out.print("|");
+          for (int x = 0; x < this.actualWidth; x++)
+          {
+             if (this.image.getPixel(x, y))
+             {
+                System.out.print(this.BLACK_CHAR);
+             }
+             else
+             {
+                System.out.print(this.WHITE_CHAR);
+             }
+          }
+          System.out.println("|");
+          System.out.println();
+       }
    }
 
    /****************************************END*****OF*******PERSON2************************************/
