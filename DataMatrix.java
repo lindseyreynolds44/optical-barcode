@@ -56,6 +56,7 @@ public class DataMatrix implements BarcodeIO
 
    }
    
+   /******************************************PERSON******2**************************************/
    public boolean generateImageFromText() 
    {
       // use readCharFromCol(int col) and WriteCharToCol(int col, int code)
@@ -70,6 +71,16 @@ public class DataMatrix implements BarcodeIO
 
    }
    
+    // Use for generateImageFromText() and translateImageToText()
+    private char readCharFromCol(int col) 
+    {
+    
+    }
+    // Use for generateImageFromText() and translateImageToText()
+    private boolean WriteCharToCol(int col, int code)
+    {
+    
+    }
    public void displayTextToConsole() 
    {
       // prints out the text string to the console.
@@ -80,6 +91,8 @@ public class DataMatrix implements BarcodeIO
       // should display only the relevant portion of the image, clipping the excess blank/white from the top and right.
       //  prints out the image to the console.  In our implementation, we will do this in the form of a dot-matrix of blanks and asterisks 
    }
+
+   /****************************************END*****OF*******PERSON2************************************/
    
    // PRIVATE METHODS
 
@@ -121,16 +134,6 @@ public class DataMatrix implements BarcodeIO
 
    }
 
-   // Use for generateImageFromText() and translateImageToText()
-   private char readCharFromCol(int col) 
-   {
-   
-   }
-   // Use for generateImageFromText() and translateImageToText()
-   private boolean WriteCharToCol(int col, int code)
-   {
-   
-   }
 
    // Optional 
    public void displayRawImage() 
