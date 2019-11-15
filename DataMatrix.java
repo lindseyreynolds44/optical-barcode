@@ -33,6 +33,7 @@ public class DataMatrix implements BarcodeIO
    public readText(String text) 
    {
       // a mutator for text.  Like the constructor;  in fact it is called by the constructor.
+      // accepts a text string to be eventually encoded in an image. No translation is done here - i.e., any BarcodeImage that might be part of an implementing class is not touched, updated or defined during the reading of the text.
    }
    
    public scan(BarcodeImage image)
@@ -58,23 +59,26 @@ public class DataMatrix implements BarcodeIO
    public boolean generateImageFromText() 
    {
       // use readCharFromCol(int col) and WriteCharToCol(int col, int code)
+      // Not technically an I/O operation, this method looks at the internal text stored in the implementing class and produces a companion BarcodeImage, internally (or an image in whatever format the implementing class uses).  After this is called, we expect the implementing object to contain a fully-defined image and text that are in agreement with each other.
 
    }
    
    public boolean translateImageToText() 
    {
       // use readCharFromCol(int col) and WriteCharToCol(int col, int code)
+      // Not technically an I/O operation, this method looks at the internal image stored in the implementing class, and produces a companion text string, internally.  After this is called, we expect the implementing object to contain a fully defined image and text that are in agreement with each other.
 
    }
    
    public void displayTextToConsole() 
    {
-
+      // prints out the text string to the console.
    }
    
    public void displayImageToConsole() 
    {
-      // should display only the relevant portion of the image, clipping the excess blank/white from the top and right. 
+      // should display only the relevant portion of the image, clipping the excess blank/white from the top and right.
+      //  prints out the image to the console.  In our implementation, we will do this in the form of a dot-matrix of blanks and asterisks 
    }
    
    // PRIVATE METHODS
