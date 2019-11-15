@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Max Halbert
+ * @version November 14, 2019
+ * The structure for creating a BarcodeImage
+ */
 public class BarcodeImage implements Cloneable
 {
    public static final int MAX_HEIGHT = 30;
