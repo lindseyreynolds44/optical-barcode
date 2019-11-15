@@ -18,22 +18,39 @@ public class DataMatrix implements BarcodeIO
       // Create a new empty image
       // Create a new empty text ""
       // actualWidth and actualHeight should start at 0
+      this.image = new BarcodeImage();
+      this.text = "";
+      this.actualHeight = 0;
+      this.actualWidth = 0;
    }
    
    public DataMatrix(BarcodeImage image) 
    {
       // sets the image but leaves the text at its default value.  Call scan() and avoid duplication of code here.
+      this();
+      this.scan(image);
+
    }
 
    public DataMatrix(String text) 
    {
       // sets the text but leaves the image at its default value. Call readText() and avoid duplication of code here.
+      this();
+      this.readText(text);
    }
    
    public readText(String text) 
    {
       // a mutator for text.  Like the constructor;  in fact it is called by the constructor.
       // accepts a text string to be eventually encoded in an image. No translation is done here - i.e., any BarcodeImage that might be part of an implementing class is not touched, updated or defined during the reading of the text.
+      if (text.length() > this.image.MAX_WIDTH)
+      {
+         return false;
+      }
+
+      this.text = text;
+      this.actualWidth = text.length();
+      return true;
    }
    
    public scan(BarcodeImage image)
@@ -42,18 +59,31 @@ public class DataMatrix implements BarcodeIO
       A mutator for image.  Like the constructor;  in fact it is called by the constructor.  Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things including calling cleanImage() and then set the actualWidth and actualHeight.  Because scan() calls clone(), it should deal with the CloneNotSupportedException by embeddingthe clone() call within a try/catch block.  Don't attempt to hand-off the exception using a "throws" clause in the function header since that will not be compatible with the underlying BarcodeIO interface.  The catches(...) clause can have an empty body that does nothing.
       Accepts some image, represented as a BarcodeImage object to be described below, and stores a copy of this image.  Depending on the sophistication of the implementing class, the internally stored image might be an exact clone of the parameter, or a refined, cleaned and processed image.  Technically, there is no requirement that an implementing class use a BarcodeImage object internally, although we will do so.  For the basic DataMatrix option, it will be an exact clone.  Also, no translation is done here - i.e., any text string that might be part of an implementing class is not touched, updated or defined during the scan.
       */
+      try
+      {
+         this.image = image.clone();
+      } catch (CloneNotSupportedException exception)
+      {
+         return false;
+      }
+
+      this.cleanImage();
+      this.actualWidth = this.computeSignalWidth();
+      this.actualHeight = this.computeSignalHeight();
+
+      return true;
    }
 
    // Accessor for actualWidth
    public int getActualWidth()
    {
-
+      return this.actualWidth;
    }
 
    // Accessor for actualHeight
    public int getActualHeight()
    {
-
+      return this.actualHeight;
    }
    
    /******************************************PERSON******2**************************************/
