@@ -1,15 +1,17 @@
 /**
+ * BarcodeImage.java
  * 
- * @author Max Halbert
- * @version November 14, 2019
- * The structure for creating a BarcodeImage
+ * @author Ricardo Barbosa 
+ * @version November 15, 2019
+ * 
+ * BarcodeImage Class
  */
 public class BarcodeImage implements Cloneable
 {
    public static final int MAX_HEIGHT = 30;
    public static final int MAX_WIDTH = 65;
    
-   private boolean[][] imageData;
+   private boolean[][] imageData = new boolean[MAX_WIDTH][MAX_HEIGHT];
    
    //default constructor
    public BarcodeImage()
@@ -19,132 +21,119 @@ public class BarcodeImage implements Cloneable
    
    public BarcodeImage(String[] strData)
    {
-      initImageData();
+      this();
       
-      if(!checkSize(strData))
-      {
-         System.out.println("Fatal error, import string data either is too big or null!");
-         System.exit(0);
-      }
-      
-      // string data starts from the last string but imageData starts from first row
-      // loop until the first string is taken care of 
-      for(int row = 0, s = strData.length - 1; s >= 0; row++, s--)
-      {
-         // starts from the left then to the right in the string and the array 
-         for(int col = 0, chCtr = 0; chCtr < strData[s].length(); col++, chCtr++)
-         {
-            if(strData[s].charAt(chCtr) == '*')
-            {
-               imageData[row][col] = true;
-            }
-            else
-            {
-               imageData[row][col] = false;
-            }
-         }
-      }
-      
-   }
-   
-   // Copy constructor
-   public BarcodeImage(BarcodeImage other)
-   {
-      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
-      for(int row = 0; row < MAX_HEIGHT; row++)
-      {
-         for(int col = 0; col < MAX_WIDTH; col++)
-         {
-            imageData[row][col] = other.getPixel(row, col);
-         }
-      }
+     if (checkSize(strData))
+     {
+        imageData = new boolean[MAX_WIDTH][MAX_HEIGHT];
+
+        //loops through each character in the image 
+        for (int row = 0; row < strData.length; ++row)
+        {
+           for (int col = 0; col < strData[row].length(); ++col)
+           {
+              if (strData[row].charAt(col) == DataMatrix.BLACK_CHAR)
+                  setPixel(col, row, true);
+              else
+                  setPixel(col, row, false);
+           }
+        }
+     }
+     else
+     {
+        System.out.println("Barcode image must fall within a 30x65 dimensional space");
+     }
    }
    
    private boolean checkSize(String[] data)
    {
-      if(data == null)
+      if (data.length < MAX_HEIGHT)
       {
-         return false;
-      }
-      if(data.length <= MAX_HEIGHT)
-      {
-         for(int s = 0; s < data.length; s++)
+         int widthCount = 0;
+         char[][] dataChar = new char[data.length][];
+         for (int i = 0; i < data.length; ++i)
          {
-            if(data[s].length() > MAX_WIDTH)
+            widthCount = 0;
+            dataChar[i] = data[i].toCharArray();
+            for (int j = 0; j < dataChar[i].length; ++j)
             {
-               return false;
+               widthCount++;
+               if (widthCount >= MAX_WIDTH)
+               {
+                  return false;
+               }
             }
          }
-         return true;  
+         return true;
       }
       return false;
    }
    
    private void initImageData()
    {
-      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
-      for(int row = 0; row < MAX_HEIGHT; row++)
+      for(int row = 0; row < MAX_WIDTH; row++)
       {
-         for(int col = 0; col < MAX_WIDTH; col++)
+         for(int col = 0; col < MAX_HEIGHT; col++)
          {
-            imageData[row][col] = false;
+            setPixel(row, col, false);
          }
       }
    }
    
    // Accessor
-   public boolean getPixel(int row, int col)
+   public boolean getPixel(int col, int row)
    {
-      if(row < MAX_HEIGHT && col < MAX_WIDTH)
+      if((row >= 0 && row < MAX_HEIGHT) && (col >= 0 && col < MAX_WIDTH))
       {
-         return imageData[row][col];
+         return imageData[col][row];
       }
       return false;
    }
    
    // Mutator
-   public boolean setPixel(int row, int col, boolean value)
+   public boolean setPixel(int col, int row, boolean value)
    {
-      if(row < MAX_HEIGHT && col < MAX_WIDTH)
+      if((row >= 0 && row < MAX_HEIGHT) && (col >= 0 && col < MAX_WIDTH))
       {
-         imageData[row][col] = value;
+         imageData[col][row] = value;
          return true;
       }
       return false;
    }
    
-   public BarcodeImage clone()
+   @Override
+   public BarcodeImage clone() throws CloneNotSupportedException
    {
-      return new BarcodeImage(this);
+      BarcodeImage cloneObject = new BarcodeImage();
+
+      //duplicate filed data
+      for (int i = 0; i < MAX_WIDTH; ++i)
+      {
+         for (int j = 0; j < MAX_HEIGHT; ++j)
+         
+            cloneObject.imageData[i][j] = this.imageData[i][j];
+         
+      }
+      return cloneObject;
    }
    
-   public void displayToConsole()
+   public String displayToConsole()
    {
-      for(int col = 0; col < MAX_WIDTH +2; col++)
+      String displayData = "";
+
+      for (int i = 0; i < MAX_WIDTH; ++i)
       {
-         System.out.print('-');
-      }
-      System.out.println();
-      for(int row = MAX_HEIGHT -1; row >= 0; row--)
-      {
-         System.out.print('|');
-         for(int col = 0; col < MAX_WIDTH; col++)
+         //will print out the rows
+         displayData += "i: " + i + " "; 
+
+         //will print out cols
+         for (int j = 0; j < MAX_HEIGHT; ++j)
          {
-            if(imageData[row][col])
-            {
-               System.out.print('*');
-            }
-            else
-            {
-               System.out.print(' ');
-            }
+            displayData += "\t[" + i + "]" + "[" + j + "]:" +
+                                 imageData[i][j] + "\n";
          }
-         System.out.print("|\n");
+         displayData += "\n";
       }
-      for(int col = 0; col < MAX_WIDTH +2; col++)
-      {
-         System.out.print('-');
-      }
-      System.out.println();
+      return displayData;
    }
 }

@@ -48,8 +48,8 @@ public class Assig4
       BarcodeImage bc = new BarcodeImage(sImageIn);
       bc.displayToConsole();
       
-      /**
-        DataMatrix dm = new DataMatrix(bc);
+      
+      DataMatrix dm = new DataMatrix(bc);
      
       // First secret message
       dm.translateImageToText();
@@ -68,7 +68,7 @@ public class Assig4
       dm.generateImageFromText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
-       */
+       
    }
    
    

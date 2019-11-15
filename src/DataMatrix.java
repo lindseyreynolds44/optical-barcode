@@ -39,7 +39,7 @@ public class DataMatrix implements BarcodeIO
       this.readText(text);
    }
    
-   public readText(String text) 
+   public boolean readText(String text) 
    {
       // a mutator for text.  Like the constructor;  in fact it is called by the constructor.
       // accepts a text string to be eventually encoded in an image. No translation is done here - i.e., any BarcodeImage that might be part of an implementing class is not touched, updated or defined during the reading of the text.
@@ -53,7 +53,7 @@ public class DataMatrix implements BarcodeIO
       return true;
    }
    
-   public scan(BarcodeImage image)
+   public boolean scan(BarcodeImage image)
    {
       /*
       A mutator for image.  Like the constructor;  in fact it is called by the constructor.  Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things including calling cleanImage() and then set the actualWidth and actualHeight.  Because scan() calls clone(), it should deal with the CloneNotSupportedException by embeddingthe clone() call within a try/catch block.  Don't attempt to hand-off the exception using a "throws" clause in the function header since that will not be compatible with the underlying BarcodeIO interface.  The catches(...) clause can have an empty body that does nothing.
@@ -165,7 +165,7 @@ public class DataMatrix implements BarcodeIO
       int total = 0;
       for (int y = this.image.MAX_HEIGHT - 1; y > leftCorner; --y)
       {
-         if(this.image.getpixel(col, y))
+         if(this.image.getPixel(col, y))
          {
             total += Math.pow(2, this.image.MAX_HEIGHT - (y + 2));
          }
@@ -182,13 +182,16 @@ public class DataMatrix implements BarcodeIO
       int binaryDecomp = 128;
       while (code > 0)
       {
-         if(msg - binaryDecomp >= 0)
+         if(code - binaryDecomp >= 0)
          {
                //use log on msg to calculate the row number
-               row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(msg) / Math.log(2));
-
+               row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(code) / Math.log(2));
+               this.image.setPixel(col, row, true);
+               code -= binaryDecomp;
          }
+         binaryDecomp /= 2;
       }
+      return true;
    }
    public void displayTextToConsole() 
    {
@@ -243,12 +246,25 @@ public class DataMatrix implements BarcodeIO
       /* 
       Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
       */
+      int width = 0;
+      while (this.image.getPixel(width, this.image.MAX_HEIGHT - 1))
+      {
+         width++;
+      }
+      return width;
+
    }
    private int computeSignalHeight() 
    {
       /* 
       Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
       */
+      int height = this.image.MAX_HEIGHT - 1;
+      while (this.image.getPixel(0, height))
+      {
+         height--;
+      }
+      return (this.image.MAX_HEIGHT - 1) - height;
    }
 
    private void cleanImage() 
@@ -258,22 +274,71 @@ public class DataMatrix implements BarcodeIO
 
       The cleanImage() method would be called from within scan() and would move the signal to the lower-left of the larger 2D array.  And, since scan() is called by the constructor, that implies that the image gets adjusted upon construction.  This kind of standardization represents the many other image processing tasks that would be implemented in the scan() method.  Error correction would be done at this point in a real class design. 
       */
+      this.moveImageToLowerLeft();
    }
 
    // Method to help with manipulation in cleanImage()
    private void moveImageToLowerLeft()
    {
+      int bottom = 0;
+      for (int x = 0; x < this.image.MAX_WIDTH; x++)
+      {
+         for (int y = this.image.MAX_HEIGHT; y > 0; y--)
+         {
+            if (this.image.getPixel(x, y))
+            {
+               bottom = y;
+               break;
+            }
+         }
+        
+      }
 
+      int left = 0;
+      for (int x = 0; x < this.image.MAX_WIDTH; x++)
+      {
+         if (this.image.getPixel(x, bottom))
+         {
+            left = x;
+            break;
+         }
+      }
+
+      shiftImageDown(bottom);
+      shiftImageLeft(left);
    } 
+
    // Method to help with manipulation in cleanImage()
    private void shiftImageDown(int offset)
    {
+      if (offset == 0)
+      return;
 
+      int shiftedY;
+      for (int y = offset; y >= 0; --y)
+      {
+         for (int x = 0; x < this.image.MAX_WIDTH; ++x)
+         {
+            shiftedY = (this.image.MAX_HEIGHT - 1) - (offset - y);
+            this.image.setPixel(x, shiftedY, this.image.getPixel(x, y));
+         }
+      }
    }
+
    // Method to help with manipulation in cleanImage()
    private void shiftImageLeft(int offset)
    {
+      if (offset == 0)
+      return;
 
+      for ( int x = offset; x < image.MAX_WIDTH; x++)
+      {
+         for (int y = 0; y < image.MAX_HEIGHT; y++)
+         {
+            this.image.setPixel((x - offset), y, this.image.getPixel(x, y));
+            this.image.setPixel(x, y, false);
+         }
+      }
    }
 
 
