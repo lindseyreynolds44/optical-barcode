@@ -147,8 +147,6 @@ public class DataMatrix implements BarcodeIO
       // a nice utility that sets the image to white =  false.
    }
 
-   // adding a change
-
 }
 
 
