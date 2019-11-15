@@ -139,12 +139,15 @@ public class DataMatrix implements BarcodeIO
       */
 
    }
+
    
    // Optional 
    private void clearImage() 
    {
       // a nice utility that sets the image to white =  false.
    }
+
+   // adding a change
 
 }
 
