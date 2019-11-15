@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Assig4",
+            "request": "launch",
+            "mainClass": "Assig4"
+        }
+    ]
+}
