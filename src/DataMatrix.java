@@ -135,7 +135,7 @@ public class DataMatrix implements BarcodeIO
       int total = 0;
       for (int y = this.image.MAX_HEIGHT - 1; y > leftCorner; --y)
       {
-         if(this.image.getpixel(col, y))
+         if(this.image.getPixel(col, y))
          {
             total += Math.pow(2, this.image.MAX_HEIGHT - (y + 2));
          }
@@ -152,13 +152,17 @@ public class DataMatrix implements BarcodeIO
       int binaryDecomp = 128;
       while (code > 0)
       {
-         if(msg - binaryDecomp >= 0)
+         if(code - binaryDecomp >= 0)
          {
                //use log on msg to calculate the row number
-               row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(msg) / Math.log(2));
+               row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(code) / Math.log(2));
+               this.image.setPixel(col, row, true);
+               code -= binaryDecomp;
 
          }
+         binaryDecomp /= 2;
       }
+      return true;
    }
    public void displayTextToConsole() 
    {
