@@ -18,10 +18,8 @@ public class DataMatrix implements BarcodeIO
       // Create a new empty image
       // Create a new empty text ""
       // actualWidth and actualHeight should start at 0
-
    }
    
-   // 
    public DataMatrix(BarcodeImage image) 
    {
       // sets the image but leaves the text at its default value.  Call scan() and avoid duplication of code here.
@@ -40,7 +38,8 @@ public class DataMatrix implements BarcodeIO
    public scan(BarcodeImage image)
    {
       /*
-      a mutator for image.  Like the constructor;  in fact it is called by the constructor.  Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things including calling cleanImage() and then set the actualWidth and actualHeight.  Because scan() calls clone(), it should deal with the CloneNotSupportedException by embeddingthe clone() call within a try/catch block.  Don't attempt to hand-off the exception using a "throws" clause in the function header since that will not be compatible with the underlying BarcodeIO interface.  The catches(...) clause can have an empty body that does nothing.
+      A mutator for image.  Like the constructor;  in fact it is called by the constructor.  Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things including calling cleanImage() and then set the actualWidth and actualHeight.  Because scan() calls clone(), it should deal with the CloneNotSupportedException by embeddingthe clone() call within a try/catch block.  Don't attempt to hand-off the exception using a "throws" clause in the function header since that will not be compatible with the underlying BarcodeIO interface.  The catches(...) clause can have an empty body that does nothing.
+      Accepts some image, represented as a BarcodeImage object to be described below, and stores a copy of this image.  Depending on the sophistication of the implementing class, the internally stored image might be an exact clone of the parameter, or a refined, cleaned and processed image.  Technically, there is no requirement that an implementing class use a BarcodeImage object internally, although we will do so.  For the basic DataMatrix option, it will be an exact clone.  Also, no translation is done here - i.e., any text string that might be part of an implementing class is not touched, updated or defined during the scan.
       */
    }
 
@@ -55,8 +54,6 @@ public class DataMatrix implements BarcodeIO
    {
 
    }
-   
-   // Implementation of all BarcodeIO methods:
    
    public boolean generateImageFromText() 
    {
@@ -87,12 +84,12 @@ public class DataMatrix implements BarcodeIO
       /* 
       Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
       */
-
    }
-   
    private int computeSignalHeight() 
    {
-
+      /* 
+      Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
+      */
    }
 
    private void cleanImage() 
