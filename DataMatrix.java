@@ -59,15 +59,27 @@ public class DataMatrix implements BarcodeIO
    /******************************************PERSON******2**************************************/
    public boolean generateImageFromText() 
    {
-      // use readCharFromCol(int col) and WriteCharToCol(int col, int code)
-      // Not technically an I/O operation, this method looks at the internal text stored in the implementing class and produces a companion BarcodeImage, internally (or an image in whatever format the implementing class uses).  After this is called, we expect the implementing object to contain a fully-defined image and text that are in agreement with each other.
+      /**
+       * use readCharFromCol(int col) and WriteCharToCol(int col, int code)
+       * Not technically an I/O operation, this method looks at the internal text stored in the 
+       * implementing class and produces a companion BarcodeImage, internally 
+       * (or an image in whatever format the implementing class uses).  After this is called, 
+       * we expect the implementing object to contain a fully-defined image and text that are in 
+       * agreement with each other.
+       */ 
 
    }
    
    public boolean translateImageToText() 
    {
-      // use readCharFromCol(int col) and WriteCharToCol(int col, int code)
-      // Not technically an I/O operation, this method looks at the internal image stored in the implementing class, and produces a companion text string, internally.  After this is called, we expect the implementing object to contain a fully defined image and text that are in agreement with each other.
+      /**
+       * use readCharFromCol(int col) and WriteCharToCol(int col, int code)
+       * Not technically an I/O operation, this method looks at the internal text stored in the 
+       * implementing class and produces a companion BarcodeImage, internally 
+       * (or an image in whatever format the implementing class uses).  After this is called, 
+       * we expect the implementing object to contain a fully-defined image and text that are in 
+       * agreement with each other.
+       */ 
 
    }
    
@@ -84,6 +96,7 @@ public class DataMatrix implements BarcodeIO
    public void displayTextToConsole() 
    {
       // prints out the text string to the console.
+      System.out.println(this.text);
    }
    
    public void displayImageToConsole() 
