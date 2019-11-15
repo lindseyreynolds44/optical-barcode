@@ -17,7 +17,7 @@ public class BarcodeImage implements Cloneable
       
       if(!checkSize(strData))
       {
-         System.out.println("Fatal error, import string data is too big!");
+         System.out.println("Fatal error, import string data either is too big or null!");
          System.exit(0);
       }
       
@@ -56,6 +56,10 @@ public class BarcodeImage implements Cloneable
    
    private boolean checkSize(String[] data)
    {
+      if (data == null)
+      {
+          return false;
+      }
       if(data.length <= MAX_HEIGHT)
       {
          for(int s = 0; s < data.length; s++)
