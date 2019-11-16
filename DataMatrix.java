@@ -95,7 +95,12 @@ public class DataMatrix implements BarcodeIO
    /****************************************END*****OF*******PERSON2************************************/
 
    // PRIVATE METHODS
-
+   
+   /**
+    * Computes the width of the signal assuming it's already been shifted to
+    * the lower left corner
+    * @return The width of the signal.
+    */
    private int computeSignalWidth() 
    {
       /* 
@@ -172,7 +177,6 @@ public class DataMatrix implements BarcodeIO
           countRow++;
      }   
      return countRow;
-     //System.out.println("Blank Rows: " + countRow);
    }
    
    /**
@@ -199,7 +203,6 @@ public class DataMatrix implements BarcodeIO
           countCol++;
      }   
      return countCol;
-     //System.out.println("Blank Rows: " + countRow);
    }
    
    /**
