@@ -45,7 +45,7 @@ public class Assig4
 
       };
      
-      BarcodeImage bc = new BarcodeImage(sImageIn);
+      BarcodeImage bc = new BarcodeImage(sImageIn_2);
       bc.displayToConsole();
       
       /**
