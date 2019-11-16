@@ -9,52 +9,88 @@ public class DataMatrix implements BarcodeIO
    private int actualWidth; // dependent on the data in the image. Can change as image changes
    private int actualHeight; // and can be computed from the "spine" of the image.
 
-   // Default Constructor
-   public DataMatrix()
-   {
-      /*
-      constructs an empty, but non-null, image and text value.  The initial image should be all white, however, actualWidth and actualHeight should start at 0, so it won't really matter what's in this default image, in practice.  The text can be set to blank, "", or something like "undefined".
-      */
-      // Create a new empty image
-      // Create a new empty text ""
-      // actualWidth and actualHeight should start at 0
-   }
-   
-   public DataMatrix(BarcodeImage image) 
-   {
-      // sets the image but leaves the text at its default value.  Call scan() and avoid duplication of code here.
-   }
-
-   public DataMatrix(String text) 
-   {
-      // sets the text but leaves the image at its default value. Call readText() and avoid duplication of code here.
-   }
-   
-   public readText(String text) 
-   {
-      // a mutator for text.  Like the constructor;  in fact it is called by the constructor.
-      // accepts a text string to be eventually encoded in an image. No translation is done here - i.e., any BarcodeImage that might be part of an implementing class is not touched, updated or defined during the reading of the text.
-   }
-   
-   public scan(BarcodeImage image)
-   {
-      /*
-      A mutator for image.  Like the constructor;  in fact it is called by the constructor.  Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things including calling cleanImage() and then set the actualWidth and actualHeight.  Because scan() calls clone(), it should deal with the CloneNotSupportedException by embeddingthe clone() call within a try/catch block.  Don't attempt to hand-off the exception using a "throws" clause in the function header since that will not be compatible with the underlying BarcodeIO interface.  The catches(...) clause can have an empty body that does nothing.
-      Accepts some image, represented as a BarcodeImage object to be described below, and stores a copy of this image.  Depending on the sophistication of the implementing class, the internally stored image might be an exact clone of the parameter, or a refined, cleaned and processed image.  Technically, there is no requirement that an implementing class use a BarcodeImage object internally, although we will do so.  For the basic DataMatrix option, it will be an exact clone.  Also, no translation is done here - i.e., any text string that might be part of an implementing class is not touched, updated or defined during the scan.
-      */
-   }
-
-   // Accessor for actualWidth
-   public int getActualWidth()
-   {
-
-   }
-
-   // Accessor for actualHeight
-   public int getActualHeight()
-   {
-
-   }
+   /****************************************** PERSON 1 ****************************************/
+   /**
+    *  Default constructor that takes no arguments and creates an blank image and empty text
+    */ 
+    public DataMatrix()
+    {
+       // Create empty default member variables 
+       image = new BarcodeImage();
+       text = "";
+       actualWidth = 0;
+       actualHeight = 0;
+    }
+    
+    /**
+     * Constructor that takes a BarcodeImage object as an argument
+     * @param image
+     */
+    public DataMatrix(BarcodeImage image) 
+    {
+       if(image == null){
+          return;
+       }
+       scan(image); // read in the image
+       text = "";
+    }
+ 
+    /**
+     * Constructor that takes in a text String
+     * @param text
+     */
+    public DataMatrix(String text) 
+    {
+       image = new BarcodeImage();
+       actualWidth = 0;
+       actualHeight = 0;
+       readText(text); // read in the text
+    }
+    
+    /**
+     * Method to read in a text String
+     * @param text 
+     */
+    public boolean readText(String text) 
+    {
+       if(text == null)
+          return false;
+ 
+       this.text = text;
+       return true;
+    }
+    
+    /**
+     * Method to read in the image, make a copy of it and clean it up
+     * @param image
+     */
+    public void scan(BarcodeImage image)
+    {
+       try {
+          this.image = image.clone();
+       } catch (CloneNotSupportedException e) {
+       }
+       cleanImage();
+       actualWidth = computeSignalWidth(); 
+       actualHeight = computeSignalHeight(); 
+    }
+ 
+    /**
+     * Accessor for actualWidth
+     */ 
+    public int getActualWidth()
+    {
+       return actualWidth;
+    }
+ 
+    /**
+     * Accessor for actualHeight
+     */ 
+    public int getActualHeight()
+    {
+       return actualHeight;
+    }
+   /**************************************** END OF PERSON 1 ************************************/
    
    /******************************************PERSON******2**************************************/
    public boolean generateImageFromText() 
