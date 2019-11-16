@@ -100,13 +100,31 @@ public class DataMatrix implements BarcodeIO
    {
       /* 
       Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
-       */
+      */
+      int counter = 0;
+      for(int col = 0; col < image.MAX_WIDTH; col++)
+      {
+        if(image.getPixel(image.MAX_HEIGHT - 1, col))
+            counter++;
+      }
+      return counter; 
    }
+   /*
+    * Computes the height of the signal assuming it's already been shifted
+    * to the lower left corner.
+    * @return The height of the signal
+    */
    private int computeSignalHeight() 
    {
       /* 
       Assuming that the image is correctly situated in the lower-left corner of the larger boolean array, these methods use the "spine" of the array (left and bottom BLACK) to determine the actual size.
-       */
+      */
+      int counter = 0;
+      int firstCol = 0;
+      for(int row = 0; row < image.MAX_HEIGHT; row++)
+         if(image.getPixel(row,firstCol))
+           counter++;
+       return counter;  
    }
 
    private void cleanImage() 
