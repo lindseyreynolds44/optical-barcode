@@ -13,7 +13,7 @@
  public interface BarcodeIO
  {
      //stores a copy of the image 
-     public boolean scna(BarcodeImage bc);
+     public boolean scan(BarcodeImage bc);
 
      //stores a string to be encoded into BarcodeImage
      public boolean readText(String text);
