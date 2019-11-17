@@ -190,7 +190,7 @@ public class DataMatrix implements BarcodeIO
       {
          if(code - binaryDecomp >= 0)
          {
-               //use log on msg to calculate the row number
+               //use log on code to calculate the row number
                row = (this.image.MAX_HEIGHT - 2) - (int)(Math.log(code) / Math.log(2));
                this.image.setPixel(col, row, true);
                code -= binaryDecomp;
