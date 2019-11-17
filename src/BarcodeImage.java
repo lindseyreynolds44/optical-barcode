@@ -23,13 +23,13 @@ public class BarcodeImage implements Cloneable
       
       if(!checkSize(strData))
       {
-         System.out.println("Fatal error, import string data either is too big or null!");
+         System.out.println("Fatal error, import string data is too big!");
          System.exit(0);
       }
       
       // string data starts from the last string but imageData starts from first row
       // loop until the first string is taken care of 
-      for(int row = 0, s = strData.length - 1; s >= 0; row++, s--)
+      for(int row = MAX_HEIGHT - 1, s = strData.length - 1; s >= 0; row--, s--)
       {
          // starts from the left then to the right in the string and the array 
          for(int col = 0, chCtr = 0; chCtr < strData[s].length(); col++, chCtr++)
@@ -125,7 +125,7 @@ public class BarcodeImage implements Cloneable
          System.out.print('-');
       }
       System.out.println();
-      for(int row = MAX_HEIGHT -1; row >= 0; row--)
+      for(int row = 0; row < MAX_HEIGHT; row++)
       {
          System.out.print('|');
          for(int col = 0; col < MAX_WIDTH; col++)
