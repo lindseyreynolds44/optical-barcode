@@ -50,7 +50,7 @@ public class Assig4
       BarcodeImage bc = new BarcodeImage(sImageIn_2);
       bc.displayToConsole();
 
-      
+      /*
       DataMatrix dm = new DataMatrix(bc);
 
       // First secret message
@@ -70,6 +70,7 @@ public class Assig4
       dm.generateImageFromText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
+      */
    }
 
 

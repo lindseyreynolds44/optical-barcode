@@ -1,90 +1,51 @@
 package src;
 
-/**
- * 
- * @author Max Halbert
- * @version November 14, 2019
- * The structure for creating a BarcodeImage
- */
 public class BarcodeImage implements Cloneable
 {
-   public static final int MAX_HEIGHT = 30;
+   public static final int MAX_HEIGHT = 30;	
    public static final int MAX_WIDTH = 65;
-
    private boolean[][] imageData;
-
-   //default constructor
-   public BarcodeImage()
+   
+   /**
+    * Default Constructor
+    */ 
+   public BarcodeImage() 
    {
-      initImageData();
+      defaultImage();
    }
 
-   public BarcodeImage(String[] strData)
+   /**
+    * Contructor that takes an array of strings
+    */  
+   public BarcodeImage(String[] strData) 
    {
-      initImageData();
-
+      // Check if the string array is null or too large
       if(!checkSize(strData))
       {
-         System.out.println("Fatal error, import string data is too big!");
-         System.exit(0);
+         System.out.println("Null or too big");
+         return;
       }
 
-      // string data starts from the last string but imageData starts from first row
-      // loop until the first string is taken care of 
-      for(int row = MAX_HEIGHT - 1, s = strData.length - 1; s >= 0; row--, s--)
+      defaultImage();
+   
+      for(int imageRow = MAX_HEIGHT - 1, strRow = strData.length - 1; strRow >= 0; imageRow--, strRow--)
       {
-         // starts from the left then to the right in the string and the array 
-         for(int col = 0, chCtr = 0; chCtr < strData[s].length(); col++, chCtr++)
+         for(int col = 0; col < strData[strRow].length(); col++)
          {
-            if(strData[s].charAt(chCtr) == '*')
-            {
-               imageData[row][col] = true;
-            }
-            else
-            {
-               imageData[row][col] = false;
-            }
+            if(strData[strRow].charAt(col) == ' ')
+               imageData[imageRow][col] = false;
+            else 
+               imageData[imageRow][col] = true;
          }
-      }
 
+      }  
    }
 
-   // Copy constructor
-   public BarcodeImage(BarcodeImage other)
+   private void defaultImage()
    {
       imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
-      for(int row = 0; row < MAX_HEIGHT; row++)
-      {
-         for(int col = 0; col < MAX_WIDTH; col++)
-         {
-            imageData[row][col] = other.getPixel(row, col);
-         }
-      }
-   }
 
-   private boolean checkSize(String[] data)
-   {
-      if(data == null)
-      {
-         return false;
-      }
-      if(data.length <= MAX_HEIGHT)
-      {
-         for(int s = 0; s < data.length; s++)
-         {
-            if(data[s].length() > MAX_WIDTH)
-            {
-               return false;
-            }
-         }
-         return true;  
-      }
-      return false;
-   }
-
-   private void initImageData()
-   {
-      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
+      // loop through the array, making all booleans false (blank)
       for(int row = 0; row < MAX_HEIGHT; row++)
       {
          for(int col = 0; col < MAX_WIDTH; col++)
@@ -93,60 +54,93 @@ public class BarcodeImage implements Cloneable
          }
       }
    }
-
-   // Accessor
-   public boolean getPixel(int row, int col)
+   
+   /**
+    * Accessor for each bit in the image
+    */
+   public boolean getPixel(int row, int col) 
    {
-      if(row < MAX_HEIGHT && col < MAX_WIDTH)
-      {
-         return imageData[row][col];
-      }
-      return false;
+      // return false if this pixel is out of bounds
+      if(row > MAX_HEIGHT - 1 || col > MAX_WIDTH - 1)
+         return false;
+
+      // locate the pixel and return its value
+      return imageData[row][col];     
    }
 
-   // Mutator
+   // Mutator for each bit in the image
    public boolean setPixel(int row, int col, boolean value)
    {
-      if(row < MAX_HEIGHT && col < MAX_WIDTH)
+      // return false if this pixel is out of bounds
+      if(row > MAX_HEIGHT - 1 || col > MAX_WIDTH - 1)
+         return false;
+
+      // set this location with value
+      imageData[row][col] = value;
+      return true;
+   }
+   
+   // Optional 
+   // A private utility method is highly recommended, but not required:  
+   private boolean checkSize(String[] data)  
+   {
+      if(data == null || data.length > MAX_HEIGHT)
       {
-         imageData[row][col] = value;
-         return true;
+         return false;
       }
-      return false;
-   }
-
-   public BarcodeImage clone()
-   {
-      return new BarcodeImage(this);
-   }
-
-   public void displayToConsole()
-   {
-      for(int col = 0; col < MAX_WIDTH +2; col++)
+      for(String row: data)
       {
-         System.out.print('-');
+         if(row.length() > MAX_WIDTH)
+            return false;
+      }
+      return true;
+   }
+   
+   public void displayToConsole() 
+   {
+      for(int top = 0; top < MAX_WIDTH + 2; top++)
+      {
+         System.out.print("-");
       }
       System.out.println();
+      // loop through the array, printing all the values
       for(int row = 0; row < MAX_HEIGHT; row++)
       {
-         System.out.print('|');
-         for(int col = 0; col < MAX_WIDTH; col++)
+         System.out.print("|");
+         for(int col = 0; col < MAX_WIDTH ; col++)
          {
             if(imageData[row][col])
             {
-               System.out.print('*');
+               System.out.print("*");
             }
             else
             {
-               System.out.print(' ');
+               System.out.print(" ");
             }
          }
          System.out.print("|\n");
       }
-      for(int col = 0; col < MAX_WIDTH +2; col++)
+      for(int bottom = 0; bottom < MAX_WIDTH + 2; bottom++)
       {
-         System.out.print('-');
+         System.out.print("-");
       }
-      System.out.println();
    }
+   
+   public BarcodeImage clone() throws CloneNotSupportedException
+   {
+      BarcodeImage copy = new BarcodeImage();
+
+      // loop through the array, copying values
+      for(int row = 0; row < MAX_HEIGHT; row++)
+      {
+         for(int col = 0; col < MAX_WIDTH; col++)
+         {
+            copy.setPixel(row, col, this.getPixel(row, col));
+         }
+      }
+      
+      return copy;
+
+   }
+
 }
