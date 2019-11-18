@@ -112,7 +112,16 @@ public class DataMatrix implements BarcodeIO
       for(int i = 0; i < text.length(); i++)
       {
          int asciiValue = text.charAt(i);
+         // Retrieve all 128s
+         int whatsLeft = asciiValue / 128;
+         System.out.println("ascii value: " + asciiValue);
+         System.out.println("128s whats left: " + whatsLeft);
+         whatsLeft = asciiValue / 64;
+         System.out.println("64s whats left: " + whatsLeft);
       }
+
+      
+      
 
 
       return true;

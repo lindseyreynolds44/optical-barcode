@@ -128,7 +128,7 @@ public class BarcodeImage implements Cloneable
    
    public BarcodeImage clone() throws CloneNotSupportedException
    {
-      BarcodeImage copy = new BarcodeImage();
+      BarcodeImage copy = (BarcodeImage)super.clone();
 
       // loop through the array, copying values
       for(int row = 0; row < MAX_HEIGHT; row++)
