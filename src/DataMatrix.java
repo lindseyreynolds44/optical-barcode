@@ -198,35 +198,16 @@ public class DataMatrix implements BarcodeIO
    // Helper for generateImageFromText method
    private boolean writeCharToCol(int col, int code)
    {
-      switch(code)
+      int value = 128;
+      int row = 1;
+      while(value > 0)
       {
-         case 128:
-            image.setPixel(1, col, true); 
-            break;
-         case 64:
-            image.setPixel(2, col, true); 
-            break;
-         case 32:
-            image.setPixel(3, col, true); 
-            break;
-         case 16:
-            image.setPixel(4, col, true); 
-            break;
-         case 8:
-            image.setPixel(5, col, true); 
-            break;
-         case 4:
-            image.setPixel(6, col, true); 
-            break;
-         case 2:
-            image.setPixel(7, col, true); 
-            break;
-         case 1:
-            image.setPixel(8, col, true); 
-            break;
+         if(code == value)
+            image.setPixel(row, col, true); 
+         value /= 2;
+         row++;
       }
       return true;
-      
    }
    public void displayTextToConsole() 
    {
@@ -244,8 +225,20 @@ public class DataMatrix implements BarcodeIO
        * of blanks and asterisks
        */
       image.displayToConsole();
-
-
+      /*int row, col;
+      System.out.println();
+      for(row = BarcodeImage.MAX_HEIGHT - actualHeight; row < BarcodeImage.MAX_HEIGHT; row++) {
+         for(col = 0; col < actualWidth; col++) {
+            if(image.getPixel(row, col) == true) {
+               System.out.print("*");
+            } else {
+               System.out.print(" ");
+            }
+         }
+         System.out.println();
+      }
+      System.out.println();
+      */
    }
 
    /****************************************END*****OF*******PERSON2************************************/
@@ -405,7 +398,24 @@ public class DataMatrix implements BarcodeIO
       /*
        Can be implemented to show the full image data including the blank top and right.  It is a useful debugging tool.
        */
-      image.displayToConsole();
+      for(int row = 0; row < this.image.MAX_HEIGHT; row++)
+      {
+         System.out.print("|");
+         for(int col = 0; col < this.image.MAX_WIDTH; col++)
+         {
+            if(this.image.getPixel(row, col))
+            {
+               System.out.print(this.BLACK_CHAR);
+            }
+            else
+            {
+               System.out.print(this.WHITE_CHAR);
+            }
+         }
+         System.out.print("|");
+         System.out.println();
+          
+      }
    }
 
 

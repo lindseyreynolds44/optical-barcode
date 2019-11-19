@@ -70,10 +70,15 @@ public class Assig4
 
 
       BarcodeImage bc = new BarcodeImage(sImageIn);
-      bc.displayToConsole();
+      //bc.displayToConsole();
       
-      DataMatrix dm = new DataMatrix(bc);
-
+      //DataMatrix dm = new DataMatrix(bc);
+      DataMatrix dm = new DataMatrix("This is a good SAMPLE to look at.");
+      dm.generateImageFromText();
+      //dm.displayRawImage();
+      dm.displayImageToConsole();
+      
+      /*
       // First secret message
       dm.translateImageToText();
       dm.displayTextToConsole();
@@ -91,6 +96,12 @@ public class Assig4
       dm.generateImageFromText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
+
+      dm.readText("This is a good SAMPLE to look at.");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      */
       
    }
 
