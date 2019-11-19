@@ -167,40 +167,32 @@ public class DataMatrix implements BarcodeIO
        */ 
 
       char[] textArray = new char[actualWidth - 2];
-
-
-      for(int row = 0; row < actualWidth; row++){
-         for(int col = 0; col < actualHeight; col++)
-         {
-            System.out.println("Pixel col: " + col + " row: " + row + "value: " 
-               + image.getPixel(row, col));
-         }
-      }
       for(int col = 1; col < textArray.length + 1; col++)
       {
          textArray[col - 1] = readCharFromCol(col);
       }
-      text = textArray.toString();
-      System.out.println(text);
+      this.text = new String(textArray);
       return true;
-
    }
 
    // Helper for translateImageToText method  
    private char readCharFromCol(int col) 
    {
-       //adjusts value for new barcode lower left location
-       final int leftCorner = this.image.MAX_HEIGHT - this.actualHeight;
+      // Find where the image starts 
+      int startRow = 0;
+      while(!image.getPixel(startRow, 0))
+         startRow++;
 
-       int total = 0;
-       for (int y = this.image.MAX_HEIGHT - 1; y > leftCorner; --y)
-       {
-          if(this.image.getPixel(col, y))
-          {
-             total += Math.pow(2, this.image.MAX_HEIGHT - (y + 2));
-          }
-       }
-       return (char) total;
+      // Get the ascii value of the given column
+      int asciiValue = 0;
+      int value = 128;
+      for(int row = startRow + 1; row < startRow + actualHeight - 1; row++)
+      {
+         if(image.getPixel(row, col))
+            asciiValue += value;
+         value /= 2;
+      }
+      return (char)asciiValue;
    }
 
    // Helper for generateImageFromText method
@@ -251,6 +243,7 @@ public class DataMatrix implements BarcodeIO
        * In our implementation, we will do this in the form of a dot-matrix 
        * of blanks and asterisks
        */
+      image.displayToConsole();
 
 
    }
