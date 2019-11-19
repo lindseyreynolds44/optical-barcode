@@ -107,23 +107,51 @@ public class DataMatrix implements BarcodeIO
        * we expect the implementing object to contain a fully-defined image and text that are in 
        * agreement with each other.
        */ 
-      int[] asciiValues = new int[text.length()];
+      image = new BarcodeImage();
 
-      for(int i = 0; i < text.length(); i++)
+      this.actualHeight = 10;
+      this.actualWidth = text.length() + 2;
+
+      // Add top and bottom astrix border
+      for(int col = 0; col < actualWidth; col++)
       {
-         int asciiValue = text.charAt(i);
-         // Retrieve all 128s
-         int whatsLeft = asciiValue / 128;
-         System.out.println("ascii value: " + asciiValue);
-         System.out.println("128s whats left: " + whatsLeft);
-         whatsLeft = asciiValue / 64;
-         System.out.println("64s whats left: " + whatsLeft);
+         // Add border at top
+         if(col % 2 == 0)
+            image.setPixel(0, col, true);
+         // Add border at bottom
+         image.setPixel(actualHeight - 1, col, true);
       }
 
-      
-      
+      // Add side astrix borders
+      for(int row = 0; row < actualHeight; row++)
+      {
+         // Add border on right
+         if(row % 2 == 0)
+            image.setPixel(row, actualWidth - 1, true);
+         // Add border on left
+         image.setPixel(row, 0, true);
+      }
 
+      // Loop through the text, one character at a time, adding it to the image
+      for(int charIndex = 0; charIndex < text.length(); charIndex++)
+      {
+         // Get the characters ascii value
+         int asciiValue = text.charAt(charIndex);
 
+         // Retrieve each value and write into the correct column (i.e. 128, 32, 16, etc.)
+         int value = 128;
+         while (value > 0)
+         {
+            // Check which column should be filled with an astrix
+            if(asciiValue - value >= 0)
+            {
+               writeCharToCol(charIndex + 1, value);
+               asciiValue -= value;
+            }
+            value /= 2; // Move on to the next value
+         }
+      }
+      cleanImage();
       return true;
    }
 
@@ -137,20 +165,74 @@ public class DataMatrix implements BarcodeIO
        * we expect the implementing object to contain a fully-defined image and text that are in 
        * agreement with each other.
        */ 
+
+      char[] textArray = new char[actualWidth - 2];
+
+
+      for(int row = 0; row < actualWidth; row++){
+         for(int col = 0; col < actualHeight; col++)
+         {
+            System.out.println("Pixel col: " + col + " row: " + row + "value: " 
+               + image.getPixel(row, col));
+         }
+      }
+      for(int col = 1; col < textArray.length + 1; col++)
+      {
+         textArray[col - 1] = readCharFromCol(col);
+      }
+      text = textArray.toString();
+      System.out.println(text);
       return true;
 
    }
 
-   // Use for generateImageFromText() and translateImageToText()
+   // Helper for translateImageToText method  
    private char readCharFromCol(int col) 
    {
-      return ' ';
+       //adjusts value for new barcode lower left location
+       final int leftCorner = this.image.MAX_HEIGHT - this.actualHeight;
 
+       int total = 0;
+       for (int y = this.image.MAX_HEIGHT - 1; y > leftCorner; --y)
+       {
+          if(this.image.getPixel(col, y))
+          {
+             total += Math.pow(2, this.image.MAX_HEIGHT - (y + 2));
+          }
+       }
+       return (char) total;
    }
 
-   // Use for generateImageFromText() and translateImageToText()
+   // Helper for generateImageFromText method
    private boolean writeCharToCol(int col, int code)
    {
+      switch(code)
+      {
+         case 128:
+            image.setPixel(1, col, true); 
+            break;
+         case 64:
+            image.setPixel(2, col, true); 
+            break;
+         case 32:
+            image.setPixel(3, col, true); 
+            break;
+         case 16:
+            image.setPixel(4, col, true); 
+            break;
+         case 8:
+            image.setPixel(5, col, true); 
+            break;
+         case 4:
+            image.setPixel(6, col, true); 
+            break;
+         case 2:
+            image.setPixel(7, col, true); 
+            break;
+         case 1:
+            image.setPixel(8, col, true); 
+            break;
+      }
       return true;
       
    }
@@ -330,7 +412,7 @@ public class DataMatrix implements BarcodeIO
       /*
        Can be implemented to show the full image data including the blank top and right.  It is a useful debugging tool.
        */
-
+      image.displayToConsole();
    }
 
 

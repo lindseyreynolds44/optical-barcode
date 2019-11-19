@@ -47,11 +47,34 @@ public class Assig4
 
       };
 
-      //BarcodeImage bc = new BarcodeImage(sImageIn_2);
+      String[] myImage =
+      {
+         "                                          ",
+         "                                          ",
+         "* * * * * * * * * * * * * * * * * * *     ",
+         "*                                    *    ",
+         "**** *** **   ***** ****   *********      ",
+         "* ************ ************ **********    ",
+         "** *      *    *  * * *         * *       ",
+         "* *   *  *           * **    *      **    ",
+         "** * * *  *   * * * **  *   ***   ***     ",
+         "*             **    *****  *   **   **    ",
+         "*  *  *  * *  * **  ** *   ** *  * *      ",
+         "**************************************    ",
+         "                                          ",
+         "                                          ",
+         "                                          ",
+         "                                          "
+
+      };
+
+
+      BarcodeImage bc = new BarcodeImage(sImageIn);
       //bc.displayToConsole();
 
-      DataMatrix dm = new DataMatrix("this is a test");
-      dm.generateImageFromText();
+      DataMatrix dm = new DataMatrix(bc);
+      dm.translateImageToText();
+      dm.displayRawImage();
 
       /*
       DataMatrix dm = new DataMatrix(bc);

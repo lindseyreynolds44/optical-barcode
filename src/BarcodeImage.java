@@ -124,6 +124,7 @@ public class BarcodeImage implements Cloneable
       {
          System.out.print("-");
       }
+      System.out.println();
    }
    
    public BarcodeImage clone() throws CloneNotSupportedException
