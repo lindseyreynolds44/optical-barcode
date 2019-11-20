@@ -99,14 +99,6 @@ public class DataMatrix implements BarcodeIO
    /******************************************PERSON******2**************************************/
    public boolean generateImageFromText() 
    {
-      /**
-       * use readCharFromCol(int col) and WriteCharToCol(int col, int code)
-       * Not technically an I/O operation, this method looks at the internal text stored in the 
-       * implementing class and produces a companion BarcodeImage, internally 
-       * (or an image in whatever format the implementing class uses).  After this is called, 
-       * we expect the implementing object to contain a fully-defined image and text that are in 
-       * agreement with each other.
-       */ 
       image = new BarcodeImage();
 
       this.actualHeight = 10;
@@ -157,15 +149,6 @@ public class DataMatrix implements BarcodeIO
 
    public boolean translateImageToText() 
    {
-      /**
-       * use readCharFromCol(int col) and WriteCharToCol(int col, int code)
-       * Not technically an I/O operation, this method looks at the internal text stored in the 
-       * implementing class and produces a companion BarcodeImage, internally 
-       * (or an image in whatever format the implementing class uses).  After this is called, 
-       * we expect the implementing object to contain a fully-defined image and text that are in 
-       * agreement with each other.
-       */ 
-
       char[] textArray = new char[actualWidth - 2];
       for(int col = 1; col < textArray.length + 1; col++)
       {
@@ -217,13 +200,6 @@ public class DataMatrix implements BarcodeIO
 
    public void displayImageToConsole() 
    {
-      /**
-       * should display only the relevant portion of the image, 
-       * clipping the excess blank/white from the top and right.
-       * prints out the image to the console.  
-       * In our implementation, we will do this in the form of a dot-matrix 
-       * of blanks and asterisks
-       */
       image.displayToConsole();
       /*int row, col;
       System.out.println();
